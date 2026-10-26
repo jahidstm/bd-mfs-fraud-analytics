@@ -1,0 +1,52 @@
+# Python
+__pycache__/
+*.py[cod]
+*.class
+*.so
+.Python
+.venv/
+venv/
+env/
+*.egg-info/
+dist/
+build/
+
+# Environment & Secrets
+.env
+*.env
+!.env.example
+
+# Data (never commit raw/processed data)
+data/raw/
+data/processed/
+data/interim/
+
+# ML Models (large binary files)
+models/*.pkl
+models/*.joblib
+models/*.h5
+
+# Power BI (binary, tracked separately)
+*.pbix
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# Testing
+.pytest_cache/
+htmlcov/
+.coverage
