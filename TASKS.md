@@ -38,71 +38,71 @@
 - **Dependency:** Task 0.1
 - **Done criteria:** `pip install -e .` runs without error; `.env.example` lists all required env vars
 - **Estimated time:** 15 min
-- **Notes:** —
-- **Completed:** —
-- **Commit:** —
+- **Notes:** Setup virtual environment, installed dependencies, configured pyproject.toml
+- **Completed:** 2026-10-26
+- **Commit:** 3d3ad03
 
 ---
 
-### Task 0.3 — Database Setup Guide & Connection Script [Done - Agent part; Manual PostgreSQL install pending]
+### Task 0.3 — Database Setup Guide & Connection Script [Done]
 - **Who:** `[Mixed]` — Agent provides SQL script + connection test script; user installs PostgreSQL and runs it
 - **What:** `sql/setup/create_db.sql`, `src/db/connection.py`, connection string in `.env.example`
 - **Dependency:** Task 0.2
 - **Done criteria:** `psql -U mfs_user -d mfs_fraud` connects; `python -m src.db.connection` prints "Connection OK"
 - **Estimated time:** 20 min (manual)
-- **Notes:** —
-- **Completed:** —
-- **Commit:** —
+- **Notes:** PostgreSQL 18 installed by user; database mfs_fraud & user mfs_user created successfully via create_db.sql
+- **Completed:** 2026-10-26
+- **Commit:** 3d3ad03
 
 ---
 
 ## Phase 1 — Synthetic Data Generation
 
-### Task 1.1 — Data Schema & Fraud Taxonomy Design [Pending]
+### Task 1.1 — Data Schema & Fraud Taxonomy Design [Done]
 - **Who:** `[Agent]`
 - **What:** `docs/data_schema.md` — Star Schema ER diagram (Mermaid), all column definitions, 5 fraud pattern formal definitions with detection signals
 - **Dependency:** Task 0.1
 - **Done criteria:** `docs/data_schema.md` committed; Fact + 4 Dim tables defined; all 5 fraud patterns described
 - **Estimated time:** 20 min
-- **Notes:** —
-- **Completed:** —
-- **Commit:** —
+- **Notes:** Detailed star schema, district mapping, and fraud injection mechanics documented
+- **Completed:** 2026-10-26
+- **Commit:** 00f6def
 
 ---
 
-### Task 1.2 — Base Transaction Generator [Pending]
+### Task 1.2 — Base Transaction Generator [Done]
 - **Who:** `[Agent]`
 - **What:** `src/data_gen/generator.py` — Faker + NumPy, BDT amounts, BD districts/time patterns, type hints, logging, seed control, CLI entry point
 - **Dependency:** Task 1.1
 - **Done criteria:** `python -m src.data_gen.generator --rows 1000 --output data/raw/sample.csv` runs; all schema columns present; no PII
 - **Estimated time:** 30 min
-- **Notes:** —
-- **Completed:** —
-- **Commit:** —
+- **Notes:** Generates realistic BD MFS transaction distributions (bKash/Nagad/Rocket style), districts, time of day
+- **Completed:** 2026-10-26
+- **Commit:** 00f6def
 
 ---
 
-### Task 1.3 — Fraud Pattern Injection [Pending]
+### Task 1.3 — Fraud Pattern Injection [Done]
 - **Who:** `[Agent]`
 - **What:** `src/data_gen/fraud_injector.py` — 5 injection functions: (1) OTP/SIM-swap, (2) Mule account chain, (3) Cash-out ring, (4) Structuring/smurfing, (5) Impossible geography. Adds `is_fraud` and `fraud_type` columns.
 - **Dependency:** Task 1.2
 - **Done criteria:** 50K rows; fraud ratio ~2-3%; each type has >=200 records; distribution logged
 - **Estimated time:** 45 min
-- **Notes:** —
-- **Completed:** —
-- **Commit:** —
+- **Notes:** 1,468 fraud transactions injected across 5 realistic BD fraud topologies (~2.6% fraud rate)
+- **Completed:** 2026-10-26
+- **Commit:** 6291b93
 
 ---
 
-### Task 1.4 — Full Dataset Generation & Raw Export [Pending]
+### Task 1.4 — Full Dataset Generation & Raw Export [Done]
 - **Who:** `[Agent]`
 - **What:** `scripts/generate_dataset.py` — 50K+ transactions + dim table CSVs into `data/raw/`; `data/raw/` in `.gitignore`
 - **Dependency:** Task 1.3
 - **Done criteria:** All 5 CSVs in `data/raw/`; row counts logged; `data/raw/` not tracked by git
 - **Estimated time:** 15 min
-- **Notes:** —
-- **Completed:** —
-- **Commit:** —
+- **Notes:** Generated 56,468 total transactions and 4 dimension tables exported to data/raw/
+- **Completed:** 2026-10-26
+- **Commit:** 6291b93
 
 ---
 
