@@ -196,27 +196,27 @@
 
 ---
 
-### Task 4.3 — Isolation Forest Model Training & Evaluation [Pending]
+### Task 4.3 — Isolation Forest Model Training & Evaluation [Done]
 - **Who:** `[Agent]`
 - **What:** `src/ml/model.py` — Isolation Forest, tuned contamination, cost-sensitive threshold, time-held-out test evaluation. Saves `models/isolation_forest.pkl`. Primary metric: PR-AUC.
 - **Dependency:** Task 4.2
 - **Done criteria:** models/isolation_forest.pkl exists; report shows PR-AUC, Precision@5%, Precision@10%, threshold; synthetic-data limitation noted
 - **Estimated time:** 45 min
-- **Notes:** Synthetic data inflates metrics vs real-world — documented
-- **Completed:** —
-- **Commit:** —
+- **Notes:** IsolationForest (n_estimators=200, contamination=0.0279). StandardScaler fitted on train only. Threshold=0.639 (F1-optimal). Test PR-AUC=0.611 (+53.5% vs rule baseline 0.398). Precision@5%=31.2%, F1=0.566. Top feature: amount_bdt (r=+0.54). Saved to models/isolation_forest.pkl.
+- **Completed:** 2026-10-26
+- **Commit:** (see next commit)
 
 ---
 
-### Task 4.4 — Fraud Score Writeback to DB [Pending]
+### Task 4.4 — Fraud Score Writeback to DB [Done]
 - **Who:** `[Agent]`
 - **What:** `src/ml/score_writer.py` — loads model, predicts fraud_score (0-1), writes back to DB
 - **Dependency:** Task 4.3
 - **Done criteria:** All DB rows have non-null fraud_score; distribution stats (mean, p95, p99) logged
 - **Estimated time:** 20 min
-- **Notes:** —
-- **Completed:** —
-- **Commit:** —
+- **Notes:** Added fraud_score (DOUBLE) + rule_score (INT) columns to fact_transactions. 56,468/56,468 rows scored in 3.88s. Mean=0.267, P95=0.567, P99=0.745. Flagged 1,471 txns (2.61%) at threshold=0.639. vw_fraud_score_summary view created for Power BI.
+- **Completed:** 2026-10-26
+- **Commit:** (see next commit)
 
 ---
 
