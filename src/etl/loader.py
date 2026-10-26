@@ -17,6 +17,9 @@ logger = logging.getLogger('etl.loader')
 
 RAW_DIR = Path('data/raw')
 
+# Columns that may be nullable integers (Pandas reads as float when NaN present)
+NULLABLE_INT_COLS = {'agent_id', 'device_fingerprint', 'linked_nid_hash'}
+
 TABLE_CONFIGS = [
     {
         'table_name': 'dim_transaction_type',
@@ -61,7 +64,7 @@ def load_table(conn, config: dict):
     pk_col = config['pk_col']
     cols = config['cols']
     cols_str = ', '.join(cols)
-    
+
     if not csv_path.exists():
         logger.error(f'File not found: {csv_path}')
         raise FileNotFoundError(f'{csv_path} not found')
@@ -70,13 +73,18 @@ def load_table(conn, config: dict):
     csv_count = len(df)
     logger.info(f'Loading {table} from {csv_path.name} ({csv_count:,} rows in CSV)...')
 
+    # Coerce float-nullable-int cols to proper pandas Int64 so COPY gets "448" not "448.0"
+    for col in cols:
+        if col in df.columns and col in NULLABLE_INT_COLS:
+            df[col] = pd.to_numeric(df[col], errors='coerce').astype('Int64')
+
     sio = io.StringIO()
     df[cols].to_csv(sio, index=False, header=False, na_rep='\\N')
     sio.seek(0)
 
     stage_table = f'stage_{table}'
     start_time = time.time()
-    
+
     with conn.cursor() as cur:
         cur.execute(f'CREATE TEMP TABLE {stage_table} (LIKE {table} INCLUDING DEFAULTS) ON COMMIT DROP;')
         copy_sql = f"COPY {stage_table} ({cols_str}) FROM STDIN WITH (FORMAT CSV, NULL '\\N');"

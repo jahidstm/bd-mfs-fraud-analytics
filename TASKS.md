@@ -108,39 +108,39 @@
 
 ## Phase 2 — Data Engineering (ETL & Storage)
 
-### Task 2.1 — Database Schema Migration Script [Pending]
+### Task 2.1 — Database Schema Migration Script [Done]
 - **Who:** `[Agent]`
 - **What:** `sql/migrations/001_create_schema.sql` — CREATE TABLE for Fact_Transactions, Dim_Customer, Dim_Agent, Dim_Time, Dim_TransactionType with indexes and constraints
 - **Dependency:** Task 0.3, Task 1.1
 - **Done criteria:** Script runs without error; `\dt` shows all 5 tables
 - **Estimated time:** 20 min
-- **Notes:** —
-- **Completed:** —
-- **Commit:** —
+- **Notes:** 5 tables created (fact_transactions, dim_customer, dim_agent, dim_time, dim_transaction_type) with FK constraints and 12 performance indexes
+- **Completed:** 2026-10-26
+- **Commit:** 5fc54e7
 
 ---
 
-### Task 2.2 — ETL Loader (CSV to PostgreSQL) [Pending]
+### Task 2.2 — ETL Loader (CSV to PostgreSQL) [Done]
 - **Who:** `[Agent]`
 - **What:** `src/etl/loader.py` — batch insert, duplicate detection (upsert), row-count validation, structured logging
 - **Dependency:** Task 2.1, Task 1.4
 - **Done criteria:** `python -m src.etl.loader` loads all rows; DB count matches CSV; re-running safe
 - **Estimated time:** 30 min
-- **Notes:** —
-- **Completed:** —
-- **Commit:** —
+- **Notes:** 5.59s to load all 5 tables (56K+ rows). Staging table + ON CONFLICT DO NOTHING ensures idempotency. Int64 coercion fix for nullable FK columns.
+- **Completed:** 2026-10-26
+- **Commit:** 5fc54e7
 
 ---
 
-### Task 2.3 — Data Quality Checks [Pending]
+### Task 2.3 — Data Quality Checks [Done]
 - **Who:** `[Agent]`
 - **What:** `src/etl/quality.py` — null rate, range violations, referential integrity, duplicate IDs, amount outliers; pass/fail report; exit code 1 on critical failure
 - **Dependency:** Task 2.2
 - **Done criteria:** Quality report printed; exit code 0 on clean data
 - **Estimated time:** 30 min
-- **Notes:** —
-- **Completed:** —
-- **Commit:** —
+- **Notes:** 14/14 checks passed. Volume, Uniqueness, Referential Integrity, Range, Fraud Sanity all GREEN. Fraud ratio: 2.60% across 5 patterns.
+- **Completed:** 2026-10-26
+- **Commit:** 5fc54e7
 
 ---
 
