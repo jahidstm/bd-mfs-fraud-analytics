@@ -14,7 +14,7 @@ CREATE DATABASE mfs_fraud
 
 -- Create dedicated user (replace 'your_strong_password_here' with a real password)
 CREATE USER mfs_user WITH
-    PASSWORD 'your_strong_password_here'
+    PASSWORD 'mfs_pass_2026'
     NOSUPERUSER
     NOCREATEDB
     NOCREATEROLE;
