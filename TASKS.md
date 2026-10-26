@@ -26,9 +26,9 @@
 - **Dependency:** Repo created at github.com/jahidstm/bd-mfs-fraud-analytics [DONE]
 - **Done criteria:** Repo on GitHub shows these 4 files; commit `chore(setup): initial project scaffold (Task 0.1)`
 - **Estimated time:** 10 min
-- **Notes:** —
-- **Completed:** —
-- **Commit:** —
+- **Notes:** Combined with 0.2 and 0.3 in single commit per user request
+- **Completed:** 2026-10-26
+- **Commit:** 3d3ad03
 
 ---
 
@@ -363,4 +363,5 @@
 ---
 
 *Last updated: 2026-10-26 | Next: Task 0.1*
+
 
