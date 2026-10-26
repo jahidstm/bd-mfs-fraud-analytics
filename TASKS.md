@@ -146,27 +146,27 @@
 
 ## Phase 3 — SQL Analysis & KPI Layer
 
-### Task 3.1 — Core Analytical SQL Queries [Pending]
+### Task 3.1 — Core Analytical SQL Queries [Done]
 - **Who:** `[Agent]`
 - **What:** `sql/analysis/` — 8-10 documented .sql files: fraud_by_type, velocity_analysis, agent_risk, time_of_day_pattern, district_heatmap, mule_chain_detection, structuring_detection, top_flagged_transactions
 - **Dependency:** Task 2.2
 - **Done criteria:** All queries run in psql; results non-empty and logically correct
 - **Estimated time:** 45 min
-- **Notes:** —
-- **Completed:** —
-- **Commit:** —
+- **Notes:** 10 SQL files in sql/analysis/: fraud_by_type, velocity_analysis, agent_risk_score, time_of_day_pattern, district_heatmap, mule_chain_detection, structuring_detection, top_flagged_transactions, impossible_geography, cashout_ring_detection. All 10/10 verified on PostgreSQL.
+- **Completed:** 2026-10-26
+- **Commit:** (see next commit)
 
 ---
 
-### Task 3.2 — KPI Views for Power BI [Pending]
+### Task 3.2 — KPI Views for Power BI [Done]
 - **Who:** `[Agent]`
 - **What:** `sql/views/kpi_views.sql` — CREATE VIEWs: vw_daily_fraud_summary, vw_agent_risk_score, vw_transaction_detail, vw_district_summary, vw_hourly_pattern
 - **Dependency:** Task 3.1
 - **Done criteria:** All views created; SELECT * FROM vw_... LIMIT 5 returns rows
 - **Estimated time:** 30 min
-- **Notes:** —
-- **Completed:** —
-- **Commit:** —
+- **Notes:** 7 views created in sql/views/kpi_views.sql: vw_transaction_detail (56,468 rows, 34 cols), vw_daily_fraud_summary, vw_agent_risk_score, vw_district_summary (all 64 BD districts), vw_hourly_pattern, vw_fraud_pattern_summary, vw_customer_risk_profile. All 7/7 verified non-empty.
+- **Completed:** 2026-10-26
+- **Commit:** (see next commit)
 
 ---
 
