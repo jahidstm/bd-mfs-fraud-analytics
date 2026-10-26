@@ -172,27 +172,27 @@
 
 ## Phase 4 — Fraud Detection (ML)
 
-### Task 4.1 — Feature Engineering [Pending]
+### Task 4.1 — Feature Engineering [Done]
 - **Who:** `[Agent]`
 - **What:** `src/ml/features.py` — velocity, amount z-score, time features, agent risk proxy; TIME-BASED split (first 80% days train, last 20% test — no random split)
 - **Dependency:** Task 3.2
 - **Done criteria:** X_train/X_test shapes logged; test dates always after train dates (verified)
 - **Estimated time:** 30 min
-- **Notes:** No random split — prevents temporal leakage
-- **Completed:** —
-- **Commit:** —
+- **Notes:** 23 features across 7 categories (amount, velocity, time, geography, account, channel, agent). Time-based split at 2024-10-19 (80/20). Train: 45,050 rows (2.79% fraud) | Test: 11,418 rows (1.83% fraud). No temporal leakage verified.
+- **Completed:** 2026-10-26
+- **Commit:** (see next commit)
 
 ---
 
-### Task 4.2 — Rule-Based Baseline Detector [Pending]
+### Task 4.2 — Rule-Based Baseline Detector [Done]
 - **Who:** `[Agent]`
 - **What:** `src/ml/rules.py` — velocity threshold, amount z-score, impossible-geography, structuring. Reports PR-AUC, Precision@5%, Precision@10%, F1. No accuracy-only reporting.
 - **Dependency:** Task 4.1
 - **Done criteria:** PR-AUC and Precision@K in report; baseline numbers documented for comparison
 - **Estimated time:** 30 min
-- **Notes:** —
-- **Completed:** —
-- **Commit:** —
+- **Notes:** 7 rules (midnight cashout, near-threshold, cross-district, new-account cashout, high velocity, large amount, away-from-home). Optimal threshold=3. Test PR-AUC=0.398, Precision@5%=21.6%, F1=0.468. ML model must beat this.
+- **Completed:** 2026-10-26
+- **Commit:** (see next commit)
 
 ---
 
