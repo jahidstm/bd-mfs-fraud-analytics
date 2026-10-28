@@ -234,7 +234,7 @@
 
 ---
 
-### Task 5.2 — Power BI Dashboard Build [Pending]
+### Task 5.2 — Power BI Dashboard Build [Done]
 - **Who:** `[Manual]`
 - **What:** Power BI Desktop: connect to local PostgreSQL, follow powerbi_spec.md, build 4 pages, save .pbix
 - **Dependency:** Task 5.1, Task 3.2 (DB running)
@@ -246,7 +246,7 @@
 
 ---
 
-### Task 5.3 — Dashboard Screenshots & Publish [Pending]
+### Task 5.3 — Dashboard Screenshots & Publish [Done]
 - **Who:** `[Mixed]` — user publishes; Agent updates README
 - **What:** Screenshots of all 4 pages into docs/screenshots/; publish to Power BI Service; Agent embeds in README
 - **Dependency:** Task 5.2
@@ -260,7 +260,7 @@
 
 ## Phase 6 — Automation & Alerting
 
-### Task 6.1 — Daily Pipeline Orchestrator [Pending]
+### Task 6.1 — Daily Pipeline Orchestrator [Done]
 - **Who:** `[Agent]`
 - **What:** `scripts/run_pipeline.py` — generate → load → quality check → score; logs each step SUCCESS/FAILURE with timestamps
 - **Dependency:** Phase 2-4 complete
@@ -272,7 +272,7 @@
 
 ---
 
-### Task 6.2 — GitHub Actions CI/CD Workflow [Pending]
+### Task 6.2 — GitHub Actions CI/CD Workflow [Done]
 - **Who:** `[Agent]`
 - **What:** `.github/workflows/daily_pipeline.yml` — daily cron, runs pipeline, workflow_dispatch for manual trigger
 - **Dependency:** Task 6.1

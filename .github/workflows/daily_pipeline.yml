@@ -1,0 +1,118 @@
+# .github/workflows/daily_pipeline.yml
+#
+# Daily Pipeline Orchestrator — bd-mfs-fraud-analytics
+#
+# Schedule: Every day at 02:00 UTC (08:00 AM Bangladesh time)
+# Manual  : Go to Actions tab → "Daily Fraud Pipeline" → "Run workflow"
+#
+# Required GitHub Secrets (Settings → Secrets → Actions → New repository secret):
+#   DB_HOST      — PostgreSQL host (e.g., your-cloud-db.host.com OR localhost)
+#   DB_PORT      — PostgreSQL port (default: 5432)
+#   DB_NAME      — Database name  (e.g., mfs_fraud)
+#   DB_USER      — Database user  (e.g., mfs_user)
+#   DB_PASSWORD  — Database password
+#
+# NOTE: This workflow is designed for a CLOUD PostgreSQL database (e.g., Supabase,
+#       Railway, Neon, or any managed PG). For local PostgreSQL, use the
+#       manual trigger only or set up a tunnel (e.g., ngrok).
+#       DO NOT commit real credentials — use secrets only.
+
+name: Daily Fraud Pipeline
+
+on:
+  # ── Scheduled trigger: every day at 02:00 UTC ────────────────────────────
+  schedule:
+    - cron: "0 2 * * *"
+
+  # ── Manual trigger from GitHub Actions UI ────────────────────────────────
+  workflow_dispatch:
+    inputs:
+      steps:
+        description: "Pipeline steps to run (space-separated)"
+        required: false
+        default: "generate load quality score report"
+      rows:
+        description: "Number of synthetic rows to generate"
+        required: false
+        default: "500"
+
+# ── Permissions ──────────────────────────────────────────────────────────────
+permissions:
+  contents: read
+
+jobs:
+  run-pipeline:
+    name: "Run Daily Fraud Detection Pipeline"
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      # ── 1. Checkout code ─────────────────────────────────────────────────
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # ── 2. Set up Python 3.11 ────────────────────────────────────────────
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      # ── 3. Install dependencies ──────────────────────────────────────────
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+
+      # ── 4. Write .env from GitHub Secrets ────────────────────────────────
+      #      Secrets are never echoed to logs by GitHub Actions.
+      - name: Configure environment
+        run: |
+          cat > .env << EOF
+          DB_HOST=${{ secrets.DB_HOST }}
+          DB_PORT=${{ secrets.DB_PORT }}
+          DB_NAME=${{ secrets.DB_NAME }}
+          DB_USER=${{ secrets.DB_USER }}
+          DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+          EOF
+        # .env is created in runner temp storage only — not committed
+
+      # ── 5. Validate imports (dry-run) ────────────────────────────────────
+      - name: Dry-run validation
+        run: |
+          python scripts/run_pipeline.py --dry-run
+
+      # ── 6. Run the full pipeline ─────────────────────────────────────────
+      - name: Run pipeline
+        run: |
+          STEPS="${{ github.event.inputs.steps || 'generate load quality score report' }}"
+          ROWS="${{ github.event.inputs.rows || '500' }}"
+          python scripts/run_pipeline.py --steps $STEPS --rows $ROWS
+
+      # ── 7. Upload logs as artifact ───────────────────────────────────────
+      - name: Upload pipeline logs
+        if: always()  # upload even if pipeline failed
+        uses: actions/upload-artifact@v4
+        with:
+          name: pipeline-logs-${{ github.run_number }}
+          path: logs/
+          retention-days: 30
+
+      # ── 8. Post failure notice to GitHub Step Summary ────────────────────
+      - name: Write job summary
+        if: always()
+        run: |
+          echo "## Pipeline Run Summary" >> $GITHUB_STEP_SUMMARY
+          echo "| Field | Value |" >> $GITHUB_STEP_SUMMARY
+          echo "|-------|-------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Run # | ${{ github.run_number }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Trigger | ${{ github.event_name }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Timestamp (UTC) | $(date -u) |" >> $GITHUB_STEP_SUMMARY
+          echo "| Steps | ${{ github.event.inputs.steps || 'all' }} |" >> $GITHUB_STEP_SUMMARY
+          if [ -f logs/*.log ]; then
+            echo "### Last 20 log lines" >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            tail -20 logs/*.log >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+          fi
+
