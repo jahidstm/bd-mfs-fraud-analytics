@@ -222,15 +222,15 @@
 
 ## Phase 5 — Power BI Dashboard
 
-### Task 5.1 — Power BI Data Model Spec & DAX Measures Doc [Pending]
+### Task 5.1 — Power BI Data Model Spec & DAX Measures Doc [Done]
 - **Who:** `[Agent]`
 - **What:** `docs/powerbi_spec.md` — PostgreSQL connection guide for Power BI Desktop, Star Schema diagram, 4-page layout spec with visual list, ALL DAX measure code ready to copy-paste
 - **Dependency:** Task 3.2
 - **Done criteria:** docs/powerbi_spec.md committed; DAX measures syntactically complete
 - **Estimated time:** 45 min
-- **Notes:** —
-- **Completed:** —
-- **Commit:** —
+- **Notes:** docs/powerbi_spec.md — 8 sections: PostgreSQL connection (4 steps), Star Schema relationships, 30+ DAX measures across 6 categories (Base KPI, Fraud Pattern, Time Intelligence, Agent/Geo, ML Performance, Conditional Formatting), 4-page layout spec with visual lists, color palette, publish guide, troubleshooting table (7 rows), CV-ready bullets.
+- **Completed:** 2026-10-28
+- **Commit:** (next commit)
 
 ---
 
