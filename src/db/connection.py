@@ -12,6 +12,7 @@ Usage:
 import logging
 import os
 import sys
+from urllib.parse import quote_plus
 
 import psycopg2
 from dotenv import load_dotenv
@@ -33,7 +34,7 @@ DB_USER: str = os.environ.get("DB_USER", "mfs_user")
 DB_PASSWORD: str = os.environ.get("DB_PASSWORD", "")
 
 DATABASE_URL: str = (
-    f"postgresql+psycopg2://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+    f"postgresql+psycopg2://{quote_plus(DB_USER)}:{quote_plus(DB_PASSWORD)}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 )
 
 
