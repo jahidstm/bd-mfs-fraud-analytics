@@ -126,6 +126,12 @@ def step_quality():
 def step_score():
     """Score all transactions with Isolation Forest and write back to DB."""
     logger.info("Scoring transactions with Isolation Forest...")
+    from pathlib import Path
+    model_path = Path("models/isolation_forest.pkl")
+    if not model_path.exists():
+        logger.info("Model artifact not found. Training model first on current data...")
+        from src.ml.model import train_model
+        train_model()
     from src.ml.score_writer import write_scores
     write_scores()
 
