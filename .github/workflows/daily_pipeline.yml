@@ -1,30 +1,30 @@
-# .github/workflows/daily_pipeline.yml
+﻿# .github/workflows/daily_pipeline.yml
 #
-# Daily Pipeline Orchestrator — bd-mfs-fraud-analytics
+# Daily Pipeline Orchestrator â€” bd-mfs-fraud-analytics
 #
 # Schedule: Every day at 02:00 UTC (08:00 AM Bangladesh time)
-# Manual  : Go to Actions tab → "Daily Fraud Pipeline" → "Run workflow"
+# Manual  : Go to Actions tab â†’ "Daily Fraud Pipeline" â†’ "Run workflow"
 #
-# Required GitHub Secrets (Settings → Secrets → Actions → New repository secret):
-#   DB_HOST      — PostgreSQL host (e.g., your-cloud-db.host.com OR localhost)
-#   DB_PORT      — PostgreSQL port (default: 5432)
-#   DB_NAME      — Database name  (e.g., mfs_fraud)
-#   DB_USER      — Database user  (e.g., mfs_user)
-#   DB_PASSWORD  — Database password
+# Required GitHub Secrets (Settings â†’ Secrets â†’ Actions â†’ New repository secret):
+#   DB_HOST      â€” PostgreSQL host (e.g., your-cloud-db.host.com OR localhost)
+#   DB_PORT      â€” PostgreSQL port (default: 5432)
+#   DB_NAME      â€” Database name  (e.g., mfs_fraud)
+#   DB_USER      â€” Database user  (e.g., mfs_user)
+#   DB_PASSWORD  â€” Database password
 #
 # NOTE: This workflow is designed for a CLOUD PostgreSQL database (e.g., Supabase,
 #       Railway, Neon, or any managed PG). For local PostgreSQL, use the
 #       manual trigger only or set up a tunnel (e.g., ngrok).
-#       DO NOT commit real credentials — use secrets only.
+#       DO NOT commit real credentials â€” use secrets only.
 
 name: Daily Fraud Pipeline
 
 on:
-  # ── Scheduled trigger: every day at 02:00 UTC ────────────────────────────
+  # â”€â”€ Scheduled trigger: every day at 02:00 UTC â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   schedule:
     - cron: "0 2 * * *"
 
-  # ── Manual trigger from GitHub Actions UI ────────────────────────────────
+  # â”€â”€ Manual trigger from GitHub Actions UI â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   workflow_dispatch:
     inputs:
       steps:
@@ -36,7 +36,7 @@ on:
         required: false
         default: "500"
 
-# ── Permissions ──────────────────────────────────────────────────────────────
+# â”€â”€ Permissions â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 permissions:
   contents: read
 
@@ -47,24 +47,24 @@ jobs:
     timeout-minutes: 30
 
     steps:
-      # ── 1. Checkout code ─────────────────────────────────────────────────
+      # â”€â”€ 1. Checkout code â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # ── 2. Set up Python 3.11 ────────────────────────────────────────────
+      # â”€â”€ 2. Set up Python 3.11 â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
           cache: pip
 
-      # ── 3. Install dependencies ──────────────────────────────────────────
+      # â”€â”€ 3. Install dependencies â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
-          pip install -e ".[dev]"
+          python -m pip install --upgrade pip setuptools wheel
+          pip install -e .
 
-      # ── 4. Write .env from GitHub Secrets ────────────────────────────────
+      # â”€â”€ 4. Write .env from GitHub Secrets â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
       #      Secrets are never echoed to logs by GitHub Actions.
       - name: Configure environment
         run: |
@@ -75,21 +75,21 @@ jobs:
           DB_USER=${{ secrets.DB_USER }}
           DB_PASSWORD=${{ secrets.DB_PASSWORD }}
           EOF
-        # .env is created in runner temp storage only — not committed
+        # .env is created in runner temp storage only â€” not committed
 
-      # ── 5. Validate imports (dry-run) ────────────────────────────────────
+      # â”€â”€ 5. Validate imports (dry-run) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
       - name: Dry-run validation
         run: |
           python scripts/run_pipeline.py --dry-run
 
-      # ── 6. Run the full pipeline ─────────────────────────────────────────
+      # â”€â”€ 6. Run the full pipeline â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
       - name: Run pipeline
         run: |
           STEPS="${{ github.event.inputs.steps || 'generate load quality score report' }}"
           ROWS="${{ github.event.inputs.rows || '500' }}"
           python scripts/run_pipeline.py --steps $STEPS --rows $ROWS
 
-      # ── 7. Upload logs as artifact ───────────────────────────────────────
+      # â”€â”€ 7. Upload logs as artifact â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
       - name: Upload pipeline logs
         if: always()  # upload even if pipeline failed
         uses: actions/upload-artifact@v4
@@ -98,7 +98,7 @@ jobs:
           path: logs/
           retention-days: 30
 
-      # ── 8. Post failure notice to GitHub Step Summary ────────────────────
+      # â”€â”€ 8. Post failure notice to GitHub Step Summary â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
       - name: Write job summary
         if: always()
         run: |
@@ -115,4 +115,5 @@ jobs:
             tail -20 logs/*.log >> $GITHUB_STEP_SUMMARY
             echo '```' >> $GITHUB_STEP_SUMMARY
           fi
+
 
