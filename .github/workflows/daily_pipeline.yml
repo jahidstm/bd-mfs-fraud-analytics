@@ -63,7 +63,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          pip install --no-deps .
+          # package build not needed
 
       # â”€â”€ 4. Write .env from GitHub Secrets â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
       #      Secrets are never echoed to logs by GitHub Actions.
@@ -81,14 +81,14 @@ jobs:
       # â”€â”€ 5. Validate imports (dry-run) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
       - name: Dry-run validation
         run: |
-          python scripts/run_pipeline.py --dry-run
+          python -m scripts.run_pipeline --dry-run
 
       # â”€â”€ 6. Run the full pipeline â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
       - name: Run pipeline
         run: |
           STEPS="${{ github.event.inputs.steps || 'generate load quality score report' }}"
           ROWS="${{ github.event.inputs.rows || '500' }}"
-          python scripts/run_pipeline.py --steps $STEPS --rows $ROWS
+          python -m scripts.run_pipeline --steps $STEPS --rows $ROWS
 
       # â”€â”€ 7. Upload logs as artifact â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
       - name: Upload pipeline logs
@@ -116,6 +116,7 @@ jobs:
             tail -20 logs/*.log >> $GITHUB_STEP_SUMMARY
             echo '```' >> $GITHUB_STEP_SUMMARY
           fi
+
 
 
 
